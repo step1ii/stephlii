@@ -1,0 +1,56 @@
+program array_col
+
+!comments on the bottom
+
+implicit none
+!integer, parameter :: n = 8192
+!integer, parameter :: n = 8193
+real (kind =8), dimension(n,n) :: A
+real (kind =8), dimension(n,n) :: D
+real (kind =8), dimension(n,n) :: C !C1
+real (kind =8), dimension(n,n) :: V !C2
+integer :: x
+
+integer :: i,j
+
+D = 0
+
+!first loop to initalize the matrices
+do j=1, n
+D(j,j) = j + j
+do i=1,n
+A(i,j) = i + j
+end do
+end do
+
+!2nd loop to multiply the two matrices
+do j=1, n
+
+do i = 1, n
+
+C(j, i) = A(j,i) * D(i,i)
+V(j, i) = D(j,i) * A(i,j)
+
+end do
+end do
+
+x = 0
+
+!3rd loop to count the number of non zeros
+do j=1, n
+do i = 1, n
+if((C(i,j) - V(i,j)) /= 0.) then
+x = x + 1
+end if
+end do
+end do
+
+print *, "The number of elements in the matrices that do not match = ",x
+
+
+end program array_col
+
+!optimizing and debugging flags
+!gfortran array_col_hw2.f90 -O3 -fdefault-real-8 -fdefault-double-8
+!gfortran array_col_hw2.f90 -O0 -fdefault-real-8 -fdefault-double-8
+!gfortran array_col_hw2.f90 -g3 -fdefault-real-8 -fdefault-double-8 -Wall -Wextra -Wimplicit-interface -fPIC -fmax-errors=1 -g -fcheck=all -fbacktrace
